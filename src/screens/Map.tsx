@@ -7,19 +7,29 @@ import {
   Dimensions,
   Button,
   TouchableOpacity,
-  TextInput
+  TextInput,
 } from "react-native";
+import { useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { useSelector, useDispatch } from "react-redux";
-import { increment, decrement, incrementBy, decrementBy, incrementAsync, decrementAsync } from "../redux/reducers/countReducer";
+import {
+  increment,
+  decrement,
+  incrementBy,
+  decrementBy,
+  incrementAsync,
+  decrementAsync,
+} from "../redux/reducers/countReducer";
 import { AppDispatch, RootState, store } from "../redux/store";
-import { getLocationPermission } from "../components/permissions/ExpoPermission";
 import Map from "../components/map/chargermap";
+import CurrentLocationButton from "../components/map/buttons/currentLocation";
+import { LocationObject } from "expo-location";
 
 const MapScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const [location, setLocation] = useState(null); // Initialize state to hold location data
 
-  const count = useSelector((state : RootState) => state.counter.count);
+  const count = useSelector((state: RootState) => state.counter.count);
 
   const handleIncrement = () => {
     dispatch(incrementAsync(4));
@@ -29,47 +39,50 @@ const MapScreen = () => {
     dispatch(decrementBy(10));
   };
 
+  const handleLocationData = (locationData: LocationObject) => {
+    console.log(locationData); // Handle the received location data (e.g., display it or save it)
+    // For example, you might set this data to the state or perform some action with it
+    setLocation(locationData);
+  };
 
-    //   {/* <View style={styles.container}>
-    //     <Text style={styles.title_text}>Counter App</Text>
-    //     <Text style={styles.counter_text}>{count}</Text>
+  //   {/* <View style={styles.container}>
+  //     <Text style={styles.title_text}>Counter App</Text>
+  //     <Text style={styles.counter_text}>{count}</Text>
 
-    //     <TouchableOpacity onPress={handleIncrement} style={styles.btn}>
-    //       <Text style={styles.btn_text}> Increment </Text>
-    //     </TouchableOpacity>
+  //     <TouchableOpacity onPress={handleIncrement} style={styles.btn}>
+  //       <Text style={styles.btn_text}> Increment </Text>
+  //     </TouchableOpacity>
 
-    //     <TouchableOpacity
-    //       onPress={handleDecrement}
-    //       style={{ ...styles.btn, backgroundColor: "#6e3b3b" }}
-    //     >
-    //       <Text style={styles.btn_text}> Decrement </Text>
-    //     </TouchableOpacity>
-    //   </View> */}
+  //     <TouchableOpacity
+  //       onPress={handleDecrement}
+  //       style={{ ...styles.btn, backgroundColor: "#6e3b3b" }}
+  //     >
+  //       <Text style={styles.btn_text}> Decrement </Text>
+  //     </TouchableOpacity>
+  //   </View> */}
 
   return (
-    
     <View style={styles.container}>
-
-      <Button title = "Request Permission" onPress={ () => getLocationPermission()}/>
-      <View style={styles.searchBarContainer}>
-        <TextInput
-          placeholder="Search here..."
-          style={styles.searchBar}
-        />
+      <Map newLocation={location}/>
+      <View style={styles.overlay}>
+        <View style={styles.searchBarContainer}>
+          <TextInput
+            placeholder="Search here..."
+            style={styles.searchBar}
+            pointerEvents="auto" // Explicitly set to auto if inheriting none from overlay
+          />
+        </View>
       </View>
-      <Map
-      />
-      <ScrollView
-        style={styles.scrollView}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      >
-        {[...Array(10).keys()].map((i) => (
-          <View key={i} style={styles.item}>
-            <Text>Item {i + 1}</Text>
-          </View>
-        ))}
-      </ScrollView>
+      <View style={styles.scrollView}>
+        <CurrentLocationButton onData={ handleLocationData } />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {[...Array(10).keys()].map((i) => (
+            <View key={i} style={styles.item}>
+              <Text>Item {i + 1}</Text>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -81,6 +94,15 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "100%",
+  },
+  overlay: {
+    position: "absolute",
+    bottom: 0,
+    top: 100,
+    left: 0,
+    right: 0,
+    height: 50,
+    paddingVertical: 10,
   },
   scrollView: {
     position: "absolute",
@@ -119,22 +141,29 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   searchBarContainer: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 1,
-    width: '100%',
+    width: "100%",
     top: 10, // Adjust top as needed
     paddingHorizontal: 20, // Side padding
   },
   searchBar: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 10,
     fontSize: 15,
     elevation: 2, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
+    shadowColor: "#000", // Shadow for iOS
     shadowOpacity: 0.1,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
+    pointerEvents: "auto", // Add this line
+  },
+  button: {
+    position: "absolute",
+    bottom: 20, // Adjust the position as needed
+    left: "50%",
+    marginLeft: -50, // Adjust based on the button's width to center it
   },
 });
 

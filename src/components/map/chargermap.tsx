@@ -2,11 +2,28 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Button, StyleSheet } from 'react-native';
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
+import { LocationObject } from 'expo-location';
 
-const Map = () => {
+const Map = ({ newLocation }) => {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const mapRef = useRef(null); // Step 2: Add MapView ref
+
+  useEffect(() => {
+    if (newLocation) {
+      // Logic to navigate to the specified location
+      // This might involve setting the map's region, center, or similar, depending on your map library
+      setLocation(newLocation);
+      if(mapRef && mapRef.current && newLocation.coords) {
+          (mapRef.current as MapView).animateToRegion({ // Use the ref to change the region
+            latitude: newLocation.coords.latitude,
+            longitude: newLocation.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }, 1000); // 1000 ms animation duration
+      }
+    }
+  }, [newLocation]); 
 
   useEffect(() => {
     (async () => {
@@ -30,12 +47,14 @@ const Map = () => {
 
     let currentLocation = await Location.getCurrentPositionAsync({});
     setLocation(currentLocation);
-    mapRef?.current.animateToRegion({ // Use the ref to change the region
-      latitude: currentLocation.coords.latitude,
-      longitude: currentLocation.coords.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }, 1000); // 1000 ms animation duration
+    if(mapRef && mapRef.current && currentLocation.coords) {
+        (mapRef.current as MapView).animateToRegion({ // Use the ref to change the region
+          latitude: currentLocation.coords.latitude,
+          longitude: currentLocation.coords.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }, 1000); // 1000 ms animation duration
+    }
   };
 
   if (!location) {
@@ -45,8 +64,6 @@ const Map = () => {
   return (
     <View style={styles.container}>
       {/* Your existing code for buttons */}
-      <Button title="Current Location" onPress={getCurrentLocation}/>
-
       <MapView
         style={styles.map}
         ref={mapRef} // Assign the ref to your MapView
