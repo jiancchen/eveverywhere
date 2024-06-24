@@ -744,7 +744,7 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.20.0":
+"@babel/runtime@>=7", "@babel/runtime@^7.0.0", "@babel/runtime@^7.20.0":
   version "7.24.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.24.7.tgz#f4f0d5530e8dbdf59b3451b9b3e594b6ba082e12"
   integrity sha512-UwgBRMjJP+xv857DCngvqXI3Iq6J4v0wXmwc6sapg+zyhbwmQX67LUEFrkK5tbyJ30jGuG3ZvWpBiB9LCy1kWw==
@@ -1655,6 +1655,21 @@
   integrity sha512-lTM8gSFHSfkJvQkxacGM6VJtBt61ip2XO54aNfswD+KMw6eeZ4oehl7m0me3CR9hnDE4+60iAZR8sAhvCiI3NA==
   dependencies:
     nanoid "^3.1.23"
+
+"@realm/babel-plugin@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@realm/babel-plugin/-/babel-plugin-0.2.0.tgz#6cbdf32fb9de539829683eb8281aab9c834a12c4"
+  integrity sha512-n+lLIl03Pdwqsx486M8EBFcGcbDIvipm0bb8ihPXwGEOgeDlnuy9v4FAyRcgRe4SFN9zQ1vFNMDqFzBgk5Z2rA==
+
+"@realm/react@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@realm/react/-/react-0.8.0.tgz#09d1d2eb4ea29b0b5ea2836d61ca4ef335f60c16"
+  integrity sha512-QO05iPDSlGaKE8lYL2SDzWWZSrG7vXeY23HeTYX2BiQSPelWyRMe1GFzifVjghYtO1SIPoxoQGIOfJU0jZy7PA==
+  dependencies:
+    lodash.isequal "^4.5.0"
+  optionalDependencies:
+    "@babel/runtime" ">=7"
+    react-native ">=0.68"
 
 "@reduxjs/toolkit@^2.2.5":
   version "2.2.5"
@@ -4330,6 +4345,11 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
 
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==
+
 lodash.throttle@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
@@ -5425,7 +5445,7 @@ react-native-vector-icons@^10.1.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@*, react-native@0.74.2:
+react-native@*, react-native@0.74.2, react-native@>=0.68:
   version "0.74.2"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.74.2.tgz#172e64e4e79861e2b3da99b86999e4a4c55b8321"
   integrity sha512-EBMBjPPL4/GjHMP4NqsZabT3gI5WU9cSmduABGAGrd8uIcmTZ5F2Ng9k6gFmRm7n8e8CULxDNu98ZpQfBjl7Bw==

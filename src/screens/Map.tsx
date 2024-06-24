@@ -8,36 +8,48 @@ import {
   Button,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
-import { useState } from "react";
-import MapView, { Marker } from "react-native-maps";
+import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  increment,
-  decrement,
-  incrementBy,
-  decrementBy,
-  incrementAsync,
-  decrementAsync,
-} from "../redux/reducers/countReducer";
 import { AppDispatch, RootState, store } from "../redux/store";
 import Map from "../components/map/chargermap";
 import CurrentLocationButton from "../components/map/buttons/currentLocation";
 import { LocationObject } from "expo-location";
+import { fetchChargers } from "../api/charger";
+import { ChargerItem } from "../api/charger";
+import Charger from "../components/map/charger";
+
+
 
 const MapScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [location, setLocation] = useState(null); // Initialize state to hold location data
+  const [chargers, setChargers] = useState([] as ChargerItem[]); // Initialize state to hold charger data
 
   const count = useSelector((state: RootState) => state.counter.count);
+  const selectedCharger = useSelector((state: RootState) => state.charger.chargeItem);
 
-  const handleIncrement = () => {
-    dispatch(incrementAsync(4));
-  };
+  const scrollViewRef = useRef(null);
 
-  const handleDecrement = () => {
-    dispatch(decrementBy(10));
-  };
+// Function to create a new location object
+function createLocationObject(latitude: number, longitude: number) {
+    return {
+      coords: {
+        latitude: latitude,
+        longitude: longitude,
+      },
+      // You can add other properties as needed, following the structure expected by Expo Location
+    };
+  }
+
+  // Use useEffect to react to changes in selectedCharger
+  useEffect(() => {
+    // This code runs when selectedCharger changes
+   setLocation(createLocationObject(selectedCharger.lat, selectedCharger.lng));
+    // You can place any logic here to react to the change
+  }, [selectedCharger]); 
+
 
   const handleLocationData = (locationData: LocationObject) => {
     console.log(locationData); // Handle the received location data (e.g., display it or save it)
@@ -45,25 +57,19 @@ const MapScreen = () => {
     setLocation(locationData);
   };
 
-  //   {/* <View style={styles.container}>
-  //     <Text style={styles.title_text}>Counter App</Text>
-  //     <Text style={styles.counter_text}>{count}</Text>
+  const handleFetchChargers = async () => {
+    const chargerData = await fetchChargers();
+    setChargers(chargerData);
+    Alert.alert("Chargers fetched", `Found ${chargerData.length} chargers`);
+  };
 
-  //     <TouchableOpacity onPress={handleIncrement} style={styles.btn}>
-  //       <Text style={styles.btn_text}> Increment </Text>
-  //     </TouchableOpacity>
-
-  //     <TouchableOpacity
-  //       onPress={handleDecrement}
-  //       style={{ ...styles.btn, backgroundColor: "#6e3b3b" }}
-  //     >
-  //       <Text style={styles.btn_text}> Decrement </Text>
-  //     </TouchableOpacity>
-  //   </View> */}
+  useEffect(() => {
+    handleFetchChargers();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Map newLocation={location}/>
+      <Map newLocation={location} onSetMarkers={chargers}/>
       <View style={styles.overlay}>
         <View style={styles.searchBarContainer}>
           <TextInput
@@ -74,12 +80,12 @@ const MapScreen = () => {
         </View>
       </View>
       <View style={styles.scrollView}>
-        <CurrentLocationButton onData={ handleLocationData } />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {[...Array(10).keys()].map((i) => (
-            <View key={i} style={styles.item}>
-              <Text>Item {i + 1}</Text>
-            </View>
+        <CurrentLocationButton onData={handleLocationData} />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}
+        ref={scrollViewRef}
+        >
+          {chargers.map((charger) => (
+            <Charger key={charger.id} charger={charger}/>
           ))}
         </ScrollView>
       </View>
@@ -111,15 +117,7 @@ const styles = StyleSheet.create({
     right: 0,
     paddingVertical: 10,
   },
-  item: {
-    backgroundColor: "white",
-    borderRadius: 5,
-    padding: 20,
-    marginLeft: 10,
-    marginRight: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+
   title_text: {
     fontSize: 40,
     fontWeight: "900",

@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 import {configureStore} from '@reduxjs/toolkit';
-import CountReducer from './reducers/countReducer';
+import LoginReducer from './reducers/loginReducer';
+import ChargerReducer from './slice/charger';
  
 // const rootReducer = combineReducers({
 //   count: CountReducer,
@@ -9,8 +10,9 @@ import CountReducer from './reducers/countReducer';
 
 export const store = configureStore({
     reducer: {
-        counter: CountReducer,
-    },    
+        counter: LoginReducer,
+        charger: ChargerReducer
+    },
 });   
 // return type of state store needed for typescript
 export type RootState = ReturnType<typeof store.getState>;
