@@ -6,6 +6,7 @@ import MapScreen from "../screens/Map";
 import AccountScreen from "../screens/account/Account";
 import PlansScreen from "../screens/plans/Plans";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import ViewStock from "../screens/viewstock";
 
 const RootNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -75,7 +76,7 @@ const RootNavigator = () => {
           }}
         />
         <Stack.Screen name="Plans" component={PlansScreen} />
-        <Stack.Screen name="Account" component={AccountScreen} />
+        <Stack.Screen name="Extra" component={ViewStock} />
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -1,6 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-// redux/reducers/countReducer.js
 interface CounterState {
     count: number;
 }
@@ -8,23 +7,6 @@ interface CounterState {
 const initialState : CounterState = {
   count: 0,
 };
-
-// export default (state = initialState, action) => {
-//   switch (action.type) {
-//     case "COUNT_INCREASE":
-//       return {
-//         ...state,
-//         count: state.count + 1,
-//       };
-//     case "COUNT_DECREASE":
-//       return {
-//         ...state,
-//         count: state.count - 1,
-//       };
-//     default:
-//       return state;
-//   }
-// };
 
 const counterSlice = createSlice({
     name: 'counter',
